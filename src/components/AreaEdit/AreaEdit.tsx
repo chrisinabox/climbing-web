@@ -247,7 +247,7 @@ export const AreaEdit = () => {
                 .map((s) => ({ background: true, outline: s.outline }))}
               approaches={null}
               height={"300px"}
-              showSatelliteImage={false}
+              showSatelliteImage={true}
               clusterMarkers={false}
               rocks={null}
               flyToId={null}

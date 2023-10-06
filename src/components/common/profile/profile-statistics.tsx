@@ -207,7 +207,7 @@ const ProfileStatistics = ({ userId, canDownload }: ProfileStatisticsProps) => {
             markers={markers}
             defaultCenter={defaultCenter}
             defaultZoom={defaultZoom}
-            showSatelliteImage={false}
+            showSatelliteImage={true}
             clusterMarkers={true}
             flyToId={null}
           />

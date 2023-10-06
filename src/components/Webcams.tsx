@@ -59,7 +59,7 @@ const Webcams = () => {
           defaultCenter={defaultCenter}
           defaultZoom={defaultZoom}
           markers={markers}
-          showSatelliteImage={false}
+          showSatelliteImage={true}
           clusterMarkers={false}
           flyToId={null}
         />

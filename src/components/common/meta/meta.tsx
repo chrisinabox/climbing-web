@@ -51,8 +51,8 @@ const DEFAULT_VALUE: Metadata = {
   grades: [],
   defaultZoom: 9,
   defaultCenter: {
-    lat: 60.893256420810616,
-    lng: 8.842601762708886,
+    lat: 49.883841,
+    lng: -119.485469,
   },
   isBouldering: false,
   isClimbing: true,

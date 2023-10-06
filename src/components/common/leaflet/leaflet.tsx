@@ -215,6 +215,7 @@ const Leaflet = ({
       zoomControl={true}
       zoom={defaultZoom}
       center={defaultCenter}
+      maxZoom={21}
     >
       <UpdateBounds
         approaches={approaches}
@@ -257,12 +258,12 @@ const Leaflet = ({
       <LayersControl>
         <LayersControl.BaseLayer
           checked={showSatelliteImage}
-          name="Norge i Bilder"
+          name="Arcgis Online - World Imagery"
         >
           <TileLayer
             maxZoom={21}
-            attribution='<a href="https://www.norgeibilder.no/" rel="noreferrer noopener" target="_blank">Geovekst</a>'
-            url="https://waapi.webatlas.no/maptiles/tiles/webatlas-orto-newup/wa_grid/{z}/{x}/{y}.jpeg?api_key=b8e36d51-119a-423b-b156-d744d54123d5"
+            attribution='Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+            url="https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           />
         </LayersControl.BaseLayer>
 
@@ -273,29 +274,6 @@ const Leaflet = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
         </LayersControl.BaseLayer>
-
-        <LayersControl.BaseLayer
-          checked={!showSatelliteImage}
-          name="Kartverket N50 topo"
-        >
-          <TileLayer
-            maxZoom={19}
-            attribution='<a href="http://www.kartverket.no/">Kartverket</a>'
-            url="https://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo4&zoom={z}&x={x}&y={y}"
-          />
-        </LayersControl.BaseLayer>
-
-        <LayersControl.Overlay checked={true} name="Stedsnavn">
-          <WMSTileLayer
-            params={{
-              transparent: true,
-              format: "image/png",
-              layers: "Stedsnavn",
-              version: "1.3.0",
-            }}
-            url="https://openwms.statkart.no/skwms1/wms.topo4"
-          />
-        </LayersControl.Overlay>
 
         <LayersControl.Overlay checked={true} name="Vegnett">
           <WMSTileLayer

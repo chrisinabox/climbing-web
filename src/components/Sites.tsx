@@ -31,7 +31,7 @@ const Sites = () => {
       approaches={null}
       onMouseClick={null}
       onMouseMove={null}
-      showSatelliteImage={false}
+      showSatelliteImage={true}
       clusterMarkers={false}
       rocks={null}
       flyToId={null}

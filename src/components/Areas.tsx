@@ -88,7 +88,7 @@ const Areas = () => {
         markers={markers}
         defaultCenter={meta.defaultCenter}
         defaultZoom={meta.defaultZoom}
-        showSatelliteImage={false}
+        showSatelliteImage={true}
         clusterMarkers={!showForDevelopers}
         flyToId={flyToId}
       />
