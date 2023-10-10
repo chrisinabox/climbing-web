@@ -166,7 +166,7 @@ function AppRoutes() {
           <Route
             path="/problem/edit/:sectorId/:problemId"
             element={
-              <AuthContainer level="admin">
+              <AuthContainer level="logged-in">
                 <ProblemEdit />
               </AuthContainer>
             }

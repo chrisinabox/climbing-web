@@ -68,6 +68,7 @@ const ProblemEdit = () => {
         broken: null,
         lockedAdmin: sector.lockedAdmin,
         lockedSuperadmin: sector.lockedSuperadmin,
+        moderated: meta.isAdmin,
         name: "",
         comment: "",
         rock: null,
@@ -249,6 +250,7 @@ const ProblemEdit = () => {
         data.trash,
         data.lockedAdmin,
         data.lockedSuperadmin,
+        data.moderated,
         data.name,
         data.rock,
         data.comment,
@@ -385,6 +387,16 @@ const ProblemEdit = () => {
           </>
         }
       />
+      <Message 
+        size="large"
+        hidden={meta.isAdmin}
+        content={
+          <>
+            <Icon name="wizard"/>
+            Your route will be submitted for moderation, once commited you will not be able edit
+            </>
+        }
+      />
       <Form>
         <Segment>
           <Form.Group widths="equal">
@@ -411,11 +423,12 @@ const ProblemEdit = () => {
               placeholder="Enter number"
               value={data.nr}
               onChange={onNrChanged}
+              disabled={!meta.isAdmin}
             />
             <Form.Field>
               <label>Move to trash</label>
               <Checkbox
-                disabled={!data.id || data.id <= 0}
+                disabled={!data.id || data.id <= 0 || !meta.isAdmin}
                 toggle
                 checked={data.trash}
                 onChange={() =>

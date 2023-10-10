@@ -416,6 +416,7 @@ export type components = {
       broken?: string;
       lockedAdmin?: boolean;
       lockedSuperadmin?: boolean;
+      isModerated?: boolean;
       /** Format: int32 */
       nr?: number;
       name?: string;
@@ -693,6 +694,7 @@ export type components = {
       trash?: boolean;
       lockedAdmin?: boolean;
       lockedSuperadmin?: boolean;
+      moderated?: boolean;
       /** Format: int32 */
       nr?: number;
       name?: string;

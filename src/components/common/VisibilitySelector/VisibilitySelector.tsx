@@ -10,8 +10,12 @@ type CustomProps = {
 type Props = CustomProps &
   Omit<DropdownProps, "value" | "onChange" | "options">;
 
-const lockedOptions = [
+const normalOptions = [
   { key: 0, value: 0, text: "Visible for everyone" },
+] as const;
+
+const lockedOptions = [
+  ... normalOptions,
   { key: 1, value: 1, text: "Only visible for administrators" },
 ] as const;
 
@@ -37,7 +41,7 @@ export const VisibilitySelector = ({
     ? superAdminOptions
     : meta.isAdmin
     ? lockedOptions
-    : [];
+    : normalOptions;
 
   const value = incomingValue.lockedSuperadmin
     ? 2

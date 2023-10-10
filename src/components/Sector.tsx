@@ -73,7 +73,8 @@ const SectorListItem = ({ problem }: Props) => {
   return (
     <List.Item style={{ backgroundColor }} key={problem.id}>
       <List.Header>
-        {problem.danger && <Icon color="red" name="warning" />}
+        {!problem.isModerated && <Icon color="orange" name="question" />}
+        {problem.danger && <Icon color="red" name="warning"/>}
         {`#${problem.nr} `}
         <Link to={`/problem/${problem.id}`}>
           {problem.broken ? <del>{problem.name}</del> : problem.name}
@@ -312,7 +313,7 @@ const Sector = () => {
       </Helmet>
       <div style={{ marginBottom: "5px" }}>
         <div style={{ float: "right" }}>
-          {data && meta.isAdmin && (
+          {data && (
             <Button.Group size="mini" compact>
               <Button
                 animated="fade"
@@ -328,6 +329,7 @@ const Sector = () => {
                 animated="fade"
                 as={Link}
                 to={`/sector/edit/${data.areaId}/${data.id}`}
+                disabled={!meta.isAdmin}
               >
                 <Button.Content hidden>Edit</Button.Content>
                 <Button.Content visible>
@@ -542,6 +544,7 @@ const Sector = () => {
             fa: null,
             areaName: null,
             sectorName: null,
+            moderated: p.isModerated,
           };
         })}
       />

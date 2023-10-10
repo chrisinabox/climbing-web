@@ -18,6 +18,7 @@ interface Row {
   subType: string;
   num: number;
   fa: boolean;
+  moderated: boolean;
 }
 enum GroupBy {
   rock,
@@ -47,6 +48,7 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
   const [onlyFa, setOnlyFa] = useLocalStorage("problemList-onlyFa", false);
   const [uniqueRocks, setUniqueRocks] = useState([]);
   const [uniqueTypes, setUniqueTypes] = useState([]);
+  const [moderatedGroup, setModeratedGroup] = useState([]);
   const [groupByTitle, setGroupByTitle] = useState<any>(null);
   const [groupBy, setGroupBy] = useLocalStorage("problemList-groupBy", null);
   const [orderBy, setOrderBy] = useState<any>(null);
@@ -177,7 +179,15 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
       .map((p) => p.subType)
       .filter((value, index, self) => self.indexOf(value) === index)
       .sort();
+    if (rows.filter((p) => !p.moderated).length > 0) {
+      types.push("Unmoderated")
+    }
     setUniqueTypes(types);
+    const moderated = rows
+      .map((p) => p.moderated ? "Confirmed Climbs" : "Unmoderated")
+      .filter((value, index, self) => self.indexOf(value) === index)
+      .sort()
+    setModeratedGroup(moderated);
     if (isSectorNotUser && rocks.length > 0) {
       setGroupByTitle(GroupBy.rock);
       if (groupBy == null) {
@@ -210,6 +220,7 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
 
   const containsFa = data.filter((p) => p.fa).length > 0;
   const containsTicked = data.filter((p) => p.ticked).length > 0;
+  const containsUnmoderated = data.filter((p) => !p.moderated).length > 0;
 
   let list;
   if (groupBy && groupByTitle != null && groupByTitle === GroupBy.rock) {
@@ -232,7 +243,7 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
       const rows = data
         .filter(
           (p) =>
-            p.subType == subType &&
+            ((subType === "Unmoderated" && !p.moderated) || (p.subType == subType && p.moderated)) &&
             (!containsTicked || !hideTicked || !p.ticked) &&
             (!containsFa || !onlyFa || p.fa),
         )
@@ -242,6 +253,21 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
       return { label, length: rows.length, content };
     });
     list = <AccordionContainer accordionRows={accordionRows} />;
+  } else if (containsUnmoderated) {
+    const accordionRows = moderatedGroup.map((moderated) => {
+      const rows = data
+        .filter(
+          (p) =>
+            ((moderated === "Unmoderated" && !p.moderated) || (moderated === "Confirmed Climbs" && p.moderated)) &&
+            (!containsTicked || !hideTicked || !p.ticked) &&
+            (!containsFa || !onlyFa || p.fa),
+        )
+        .map((p) => p.element);
+      const label = moderated + " (" + rows.length + ")";
+      const content = <List selection>{rows}</List>;
+      return { label, length: rows.length, content };
+    });
+    list = <AccordionContainer accordionRows={accordionRows}/>;
   } else {
     const elements = data
       .filter(

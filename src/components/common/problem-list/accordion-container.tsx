@@ -10,7 +10,7 @@ type Props = {
 };
 
 const AccordionContainer = ({ accordionRows }: Props) => {
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const [activeIndex, setActiveIndex] = useState(0);
   const handleOnClick = useCallback((_, { index }) => {
     setActiveIndex((oldValue) => (oldValue === index ? -1 : index));
   }, []);
