@@ -416,7 +416,6 @@ export type components = {
       broken?: string;
       lockedAdmin?: boolean;
       lockedSuperadmin?: boolean;
-      isModerated?: boolean;
       /** Format: int32 */
       nr?: number;
       name?: string;
@@ -440,6 +439,7 @@ export type components = {
       todo?: boolean;
       t?: components["schemas"]["Type"];
       danger?: boolean;
+      moderated?: boolean;
     };
     Svg: {
       delete?: boolean;
@@ -621,10 +621,10 @@ export type components = {
       compassDirections?: components["schemas"]["CompassDirection"][];
       bouldering?: boolean;
       climbing?: boolean;
-      authenticated?: boolean;
-      admin?: boolean;
       superAdmin?: boolean;
       ice?: boolean;
+      authenticated?: boolean;
+      admin?: boolean;
     };
     Site: {
       group?: string;
@@ -694,7 +694,6 @@ export type components = {
       trash?: boolean;
       lockedAdmin?: boolean;
       lockedSuperadmin?: boolean;
-      moderated?: boolean;
       /** Format: int32 */
       nr?: number;
       name?: string;
@@ -728,6 +727,7 @@ export type components = {
       aspect?: string;
       routeLength?: string;
       descent?: string;
+      moderated?: boolean;
     };
     ProblemComment: {
       /** Format: int32 */
@@ -1148,12 +1148,12 @@ export type components = {
       messageBodyWorkers?: components["schemas"]["MessageBodyWorkers"];
       parent?: components["schemas"]["MultiPart"];
       providers?: components["schemas"]["Providers"];
+      formDataContentDisposition?: components["schemas"]["FormDataContentDisposition"];
+      simple?: boolean;
       name?: string;
       value?: string;
       content?: Record<string, never>;
       fileName?: string;
-      formDataContentDisposition?: components["schemas"]["FormDataContentDisposition"];
-      simple?: boolean;
       parameterizedHeaders?: {
         empty?: boolean;
         [key: string]: components["schemas"]["ParameterizedHeader"][] | undefined;
@@ -1403,7 +1403,6 @@ export type operations = {
   getAreasPdf: {
     parameters: {
       query: {
-        "Access token"?: string;
         "Area id": number;
       };
     };
