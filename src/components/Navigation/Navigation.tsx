@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Container, Dropdown, Image, Menu, Icon } from "semantic-ui-react";
+import { Container, Dropdown, Image, Menu, Icon, DropdownItem } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import SearchBox from "../common/search-box/search-box";
 import { useMeta } from "../common/meta";
@@ -121,6 +121,10 @@ export const Navigation = () => {
                 {(isAdmin || isSuperAdmin) && (
                   <>
                     <Dropdown.Divider />
+                    <Dropdown.Item as={Link} to="/moderate">
+                      <Icon name="certificate" />
+                      Moderate
+                    </Dropdown.Item>
                     <Dropdown.Item as={Link} to="/trash">
                       <Icon name="trash" />
                       Trash

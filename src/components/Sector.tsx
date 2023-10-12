@@ -73,7 +73,7 @@ const SectorListItem = ({ problem }: Props) => {
   return (
     <List.Item style={{ backgroundColor }} key={problem.id}>
       <List.Header>
-        {!problem.moderated && <Icon color="orange" name="question" />}
+        {!problem.moderated && <Icon color="orange" name="question circle outline" />}
         {problem.danger && <Icon color="red" name="warning"/>}
         {`#${problem.nr} `}
         <Link to={`/problem/${problem.id}`}>

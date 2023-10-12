@@ -123,6 +123,20 @@ export function useProblems() {
   });
 }
 
+export function useUnmoderatedProblems() {
+  const [cachedData, _, writeCachedData] = useLocalStorage<
+    components["schemas"]["ProblemArea"][]
+  >("cache/problems/unmoderated",[])
+
+  return useData<components["schemas"]["ProblemArea"][]>("/problems/unmoderated", {
+    placeholderData: cachedData,
+    select(data) {
+      writeCachedData(data);
+      return data;
+    },
+  })
+}
+
 export function useActivity({
   idArea,
   idSector,

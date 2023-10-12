@@ -107,6 +107,10 @@ const Webcams = lazy(
   () => import(/* webpackChunkName: "webcams" */ "./Webcams"),
   "webcams",
 );
+const Moderate = lazy(
+  () => import(/* webpackChunkName: "moderate" */"./Moderate"),
+  "moderate",
+);
 
 function AppRoutes() {
   const Wrapper = ({ children }) => {
@@ -205,6 +209,14 @@ function AppRoutes() {
             element={
               <AuthContainer level="logged-in">
                 <Profile />
+              </AuthContainer>
+            }
+          />
+          <Route
+            path="/moderate"
+            element={
+              <AuthContainer level="admin">
+                <Moderate />
               </AuthContainer>
             }
           />

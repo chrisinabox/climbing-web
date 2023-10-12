@@ -143,6 +143,10 @@ export type paths = {
     /** Move Area/Sector/Problem/Media to trash (only one of the arguments must be different from 0) */
     put: operations["putTrash"];
   };
+  "/v2/problems/unmoderated": {
+    /** Get problems requiring moderation */
+    get: operations["getUnmoderatedProblems"];
+  };
   "/v2/users/search": {
     /** Search for user */
     get: operations["getUsersSearch"];
@@ -416,6 +420,7 @@ export type components = {
       broken?: string;
       lockedAdmin?: boolean;
       lockedSuperadmin?: boolean;
+      moderated?: boolean;
       /** Format: int32 */
       nr?: number;
       name?: string;
@@ -439,7 +444,6 @@ export type components = {
       todo?: boolean;
       t?: components["schemas"]["Type"];
       danger?: boolean;
-      moderated?: boolean;
     };
     Svg: {
       delete?: boolean;
@@ -621,9 +625,9 @@ export type components = {
       compassDirections?: components["schemas"]["CompassDirection"][];
       bouldering?: boolean;
       climbing?: boolean;
-      superAdmin?: boolean;
-      ice?: boolean;
       authenticated?: boolean;
+      ice?: boolean;
+      superAdmin?: boolean;
       admin?: boolean;
     };
     Site: {
@@ -694,6 +698,7 @@ export type components = {
       trash?: boolean;
       lockedAdmin?: boolean;
       lockedSuperadmin?: boolean;
+      moderated?: boolean;
       /** Format: int32 */
       nr?: number;
       name?: string;
@@ -727,7 +732,6 @@ export type components = {
       aspect?: string;
       routeLength?: string;
       descent?: string;
-      moderated?: boolean;
     };
     ProblemComment: {
       /** Format: int32 */
@@ -1148,12 +1152,12 @@ export type components = {
       messageBodyWorkers?: components["schemas"]["MessageBodyWorkers"];
       parent?: components["schemas"]["MultiPart"];
       providers?: components["schemas"]["Providers"];
-      formDataContentDisposition?: components["schemas"]["FormDataContentDisposition"];
-      simple?: boolean;
       name?: string;
       value?: string;
       content?: Record<string, never>;
       fileName?: string;
+      formDataContentDisposition?: components["schemas"]["FormDataContentDisposition"];
+      simple?: boolean;
       parameterizedHeaders?: {
         empty?: boolean;
         [key: string]: components["schemas"]["ParameterizedHeader"][] | undefined;
@@ -1201,8 +1205,8 @@ export type components = {
       parameters?: {
         [key: string]: string;
       };
-      wildcardType?: boolean;
       wildcardSubtype?: boolean;
+      wildcardType?: boolean;
     };
     MessageBodyWorkers: Record<string, never>;
     MultiPart: {
@@ -1842,6 +1846,16 @@ export type operations = {
       default: {
         content: {
           "*/*": unknown;
+        };
+      };
+    };
+  };
+  /** Get problems requiring moderation */
+  getUnmoderatedProblems: {
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["ProblemArea"][];
         };
       };
     };

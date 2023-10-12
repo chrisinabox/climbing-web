@@ -27,7 +27,7 @@ import {
   useProblem,
 } from "../api";
 import { Loading } from "./common/widgets/widgets";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { VisibilitySelectorField } from "./common/VisibilitySelector";
@@ -46,6 +46,7 @@ const ProblemEdit = () => {
   const accessToken = useAccessToken();
   const { sectorId, problemId } = useIds();
 
+  const [feedbackComment, setFeedbackComment] = useState<string>();
   const [data, setData] = useState<Problem>(null);
   const { data: sector, status: sectorStatus } = useSector(sectorId);
   const {
@@ -57,7 +58,12 @@ const ProblemEdit = () => {
   const [showSectorMarkers, setShowSectorMarkers] = useState(true);
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
+  const { state: locationState } = useLocation();
   const meta = useMeta();
+
+  const pendingComments = "";
+
+  let isFromModerating = locationState.from && locationState.from === "/moderate";
 
   useEffect(() => {
     if (sectorStatus === "success" && problemId <= 0) {
@@ -223,6 +229,10 @@ const ProblemEdit = () => {
     setData((prevState) => ({ ...prevState, descent: value }));
   }
 
+  function onFeedbackCommentChanged(_, { value }) {
+    setFeedbackComment(value);
+  }
+
   function save(event, addNew) {
     event.preventDefault();
     const trash = data.trash ? true : false;
@@ -274,6 +284,8 @@ const ProblemEdit = () => {
         .then(async (res) => {
           if (addNew) {
             navigate(0);
+          } else if (isFromModerating) {
+            navigate(-1);
           } else {
             navigate(res.destination);
           }
@@ -282,6 +294,12 @@ const ProblemEdit = () => {
           console.warn(error);
         });
     }
+  }
+
+  function requestChanges(event) {
+    event.preventDefault();
+    let errors = this.state.errors;
+
   }
 
   function onMapClick(event) {
@@ -685,43 +703,67 @@ const ProblemEdit = () => {
             </Form.Field>
           </Form.Group>
         </Segment>
-
-        <Button.Group>
-          <Button
-            negative
-            onClick={() => {
-              if (problemId && !!problemId) {
-                navigate(`/problem/${problemId}`);
-              } else {
-                navigate(`/sector/${sectorId}`);
-              }
-            }}
-          >
-            Cancel
-          </Button>
-          <Button.Or />
-          <Button
-            positive
-            loading={saving}
-            onClick={(event) => save(event, false)}
-            disabled={!data.name || (meta.types.length > 1 && !data.t?.id)}
-          >
-            Save
-          </Button>
-          {!problemId && (
-            <>
-              <Button.Or />
-              <Button
-                positive
-                loading={saving}
-                onClick={(event) => save(event, true)}
-                disabled={!data.name || (meta.types.length > 1 && !data.t?.id)}
-              >
-                Save, and add new
-              </Button>
-            </>
+        <Segment>
+          { isFromModerating && (
+          <Form.Field >
+              <Form.Field
+                control={TextArea}
+                placeholder="Does anything need changing?"
+                onChange={onFeedbackCommentChanged}
+              />
+            </Form.Field>
           )}
-        </Button.Group>
+          <Button.Group>
+            <Button
+              negative
+              onClick={() => {
+                if (isFromModerating) {
+                  navigate(-1);
+                } else if (problemId && !!problemId) {
+                  navigate(`/problem/${problemId}`);
+                } else {
+                  navigate(`/sector/${sectorId}`);
+                }
+              }}
+            >
+              Cancel
+            </Button>
+            { isFromModerating && (
+              <>
+                <Button.Or />
+                <Button
+                  color="yellow"
+                  disabled={!feedbackComment || feedbackComment.length == 0}
+                >
+                  Request Changes
+                </Button>
+              </>
+            )}
+            <Button.Or />
+            <Button
+              positive
+              loading={saving}
+              onClick={(event) => save(event, false)}
+              disabled={!data.name || (meta.types.length > 1 && !data.t?.id)}
+            >
+              { isFromModerating ? "Approve" : "Save" }
+            </Button>
+            {!problemId && (
+              <>
+                <Button.Or />
+                <Button
+                  positive
+                  loading={saving}
+                  onClick={(event) => save(event, true)}
+                  disabled={!data.name || (meta.types.length > 1 && !data.t?.id)}
+                >
+                  Save, and add new
+                </Button>
+              </>
+            )}
+          </Button.Group>
+        </Segment>
+
       </Form>
     </>
   );
