@@ -76,6 +76,7 @@ const SectorListItem = ({ sector, problem }: Props) => {
   return (
     <List.Item style={{ backgroundColor }} key={problem.id}>
       <List.Header>
+        {!problem.moderated && <Icon color="orange" name="question circle outline" />}
         {problem.danger && <Icon color="red" name="warning" />}
         <Link to={`/problem/${problem.id}`}>{problem.name}</Link>{" "}
         {problem.grade}
@@ -400,6 +401,7 @@ const Area = () => {
                     subType: p.t.subType,
                     num: null,
                     fa: null,
+                    moderated: p.moderated,
                   })),
                 ],
                 [],

@@ -45,10 +45,13 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
     "problemList-hideTicked",
     false,
   );
+  const [hideUnmoderated, setHideUnmoderated] = useLocalStorage(
+    "problemList-hideUnmoderated",
+    false
+  );
   const [onlyFa, setOnlyFa] = useLocalStorage("problemList-onlyFa", false);
   const [uniqueRocks, setUniqueRocks] = useState([]);
   const [uniqueTypes, setUniqueTypes] = useState([]);
-  const [moderatedGroup, setModeratedGroup] = useState([]);
   const [groupByTitle, setGroupByTitle] = useState<any>(null);
   const [groupBy, setGroupBy] = useLocalStorage("problemList-groupBy", null);
   const [orderBy, setOrderBy] = useState<any>(null);
@@ -179,15 +182,11 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
       .map((p) => p.subType)
       .filter((value, index, self) => self.indexOf(value) === index)
       .sort();
-    if (rows.filter((p) => !p.moderated).length > 0) {
-      types.push("Unmoderated")
-    }
     setUniqueTypes(types);
     const moderated = rows
       .map((p) => p.moderated ? "Confirmed Climbs" : "Unmoderated")
       .filter((value, index, self) => self.indexOf(value) === index)
       .sort()
-    setModeratedGroup(moderated);
     if (isSectorNotUser && rocks.length > 0) {
       setGroupByTitle(GroupBy.rock);
       if (groupBy == null) {
@@ -243,9 +242,10 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
       const rows = data
         .filter(
           (p) =>
-            ((subType === "Unmoderated" && !p.moderated) || (p.subType == subType && p.moderated)) &&
+            (p.subType == subType) &&
             (!containsTicked || !hideTicked || !p.ticked) &&
-            (!containsFa || !onlyFa || p.fa),
+            (!containsFa || !onlyFa || p.fa) &&
+            (!containsUnmoderated || !(hideUnmoderated && !p.moderated)),
         )
         .map((p) => p.element);
       const label = subType + " (" + rows.length + ")";
@@ -253,27 +253,13 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
       return { label, length: rows.length, content };
     });
     list = <AccordionContainer accordionRows={accordionRows} />;
-  } else if (containsUnmoderated) {
-    const accordionRows = moderatedGroup.map((moderated) => {
-      const rows = data
-        .filter(
-          (p) =>
-            ((moderated === "Unmoderated" && !p.moderated) || (moderated === "Confirmed Climbs" && p.moderated)) &&
-            (!containsTicked || !hideTicked || !p.ticked) &&
-            (!containsFa || !onlyFa || p.fa),
-        )
-        .map((p) => p.element);
-      const label = moderated + " (" + rows.length + ")";
-      const content = <List selection>{rows}</List>;
-      return { label, length: rows.length, content };
-    });
-    list = <AccordionContainer accordionRows={accordionRows}/>;
   } else {
     const elements = data
       .filter(
         (p) =>
           (!containsTicked || !hideTicked || !p.ticked) &&
-          (!containsFa || !onlyFa || p.fa),
+          (!containsFa || !onlyFa || p.fa) &&
+          (!containsUnmoderated || !(hideUnmoderated && !p.moderated)),
       )
       .map((p) => p.element);
     list = (
@@ -333,6 +319,20 @@ const ProblemList = ({ rows, isSectorNotUser, preferOrderByGrade }: Props) => {
               </Step.Description>
             </Step.Content>
           </Step>
+        )}
+        {isSectorNotUser && containsUnmoderated && (
+          <Step link onClick={() => setHideUnmoderated(!hideUnmoderated)}>
+          <Step.Content>
+            <Step.Title>Hide unmoderated</Step.Title>
+            <Step.Description>
+              <Checkbox
+                toggle
+                checked={hideUnmoderated}
+                onClick={() => setHideUnmoderated(!hideUnmoderated)}
+              />
+            </Step.Description>
+          </Step.Content>
+        </Step>
         )}
         {!isSectorNotUser && containsFa && (
           <Step link onClick={() => setOnlyFa(!onlyFa)}>
