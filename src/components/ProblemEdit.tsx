@@ -298,7 +298,6 @@ const ProblemEdit = () => {
 
   function requestChanges(event) {
     event.preventDefault();
-    let errors = this.state.errors;
 
   }
 
