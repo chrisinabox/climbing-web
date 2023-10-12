@@ -63,7 +63,7 @@ const ProblemEdit = () => {
 
   const pendingComments = "";
 
-  let isFromModerating = locationState.from && locationState.from === "/moderate";
+  let isFromModerating = locationState && locationState.from && locationState.from === "/moderate";
 
   useEffect(() => {
     if (sectorStatus === "success" && problemId <= 0) {
